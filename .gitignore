@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+.vscode
+csv/
+drafts/
+original/
+selenium/
+.env
+env.py
+.DS_Store

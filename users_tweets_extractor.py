@@ -29,8 +29,6 @@ consumer_secret = os.getenv("CONSUMER_SECRET")
 access_token = os.getenv("ACCESS_TOKEN")
 access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
 
-print(consumer_key, consumer_secret, access_token, access_token_secret)
-
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
@@ -58,9 +56,7 @@ def main():
 
     # Usernames whose tweets we want to gather.
     users = [
-        # "falan4j",
-        # "MdAimanz"
-        "afrieirham_"
+        "USERNAME"
     ]
 
     # giving the user some feed back that the script is running
@@ -132,7 +128,7 @@ def main():
             print("Raw number of {0}'s tweets collected: {1}".format(
                 user, len(all_tweets)))
             print("Filtered number of {0}'s tweets written to CSV: {1}\n".format(
-                user, len(df.index) - 1))
+                user, len(df.index)))
 
     except tweepy.TweepError as e:
         print("There was an error, find details below, else check your internet connection or your " +

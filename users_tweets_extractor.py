@@ -3,6 +3,7 @@ from tweepy import Cursor
 import numpy as np
 import tweepy
 import string
+import emoji
 import re
 import os
 
@@ -33,13 +34,18 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
+
 def cleanTweets(text):
-    text = re.sub("https*\S+", " ", text)
-    text = re.sub("@\S+", " ", text)
+    # text = re.sub("https*\S+", " ", text)
+    # text = re.sub("@\S+", " ", text)
+    text = re.sub("https*\S+", "", text)
+    text = re.sub("@\S+", "", text)
+    text = emoji.demojize(text)
     # text = re.sub(r'[^\w]', ' ', text)
     # text = [char for char in text if char not in string.punctuation]
-    text =''.join(text)
+    text = ''.join(text)
     return text
+
 
 def main():
 
@@ -71,14 +77,14 @@ def main():
             print("Downloading %s's tweets:" % user)
 
             tweets = api.user_timeline(screen_name=user,
-                           # 200 is the maximum allowed count
-                           count=200,
-                           exclude_replies=True,
-                           include_rts=False,
-                           # Necessary to keep full_text
-                           # otherwise only the first 140 words are extracted
-                           tweet_mode='extended'
-                           )
+                                       # 200 is the maximum allowed count
+                                       count=200,
+                                       exclude_replies=True,
+                                       include_rts=False,
+                                       # Necessary to keep full_text
+                                       # otherwise only the first 140 words are extracted
+                                       tweet_mode='extended'
+                                       )
 
             all_tweets = []
             all_tweets.extend(tweets)
@@ -86,41 +92,43 @@ def main():
 
             while True:
                 tweets = api.user_timeline(screen_name=user,
-                                        # 200 is the maximum allowed count
-                                        count=200,
-                                        exclude_replies=True,
-                                        include_rts=False,
-                                        max_id=oldest_id - 1,
-                                        # Necessary to keep full_text
-                                        # otherwise only the first 140 words are extracted
-                                        tweet_mode='extended'
-                                        )
+                                           # 200 is the maximum allowed count
+                                           count=200,
+                                           exclude_replies=True,
+                                           include_rts=False,
+                                           max_id=oldest_id - 1,
+                                           # Necessary to keep full_text
+                                           # otherwise only the first 140 words are extracted
+                                           tweet_mode='extended'
+                                           )
                 if len(tweets) == 0:
                     break
-                
+
                 oldest_id = tweets[-1].id
                 all_tweets.extend(tweets)
-                print('N of {0} tweets downloaded till now: {1}'.format(user, len(all_tweets)))
+                print('N of {0} tweets downloaded till now: {1}'.format(
+                    user, len(all_tweets)))
 
-            # Transform the tweepy tweets into a 2D array that will populate the csv	
+            # Transform the tweepy tweets into a 2D array that will populate the csv
             outtweets = [[
-                        tweet.id_str, 
-                        tweet.created_at, 
-                        
-                        # Clean tweets (remove symbols, links and emojis)
-                        cleanTweets(tweet.full_text.encode("utf-8").decode("utf-8"))
+                tweet.id_str,
+                tweet.created_at,
 
-                        # Raw tweets
-                        # tweet.full_text.encode("utf-8").decode("utf-8")
-                        ] 
-                        for idx,tweet in enumerate(all_tweets)]
-            
-            df = DataFrame(outtweets, columns=["ID","Date Created","Text"])
-            
+                # Clean tweets (remove symbols, links and emojis)
+                cleanTweets(tweet.full_text.encode(
+                            "utf-8").decode("utf-8"))
+
+                # Raw tweets
+                # tweet.full_text.encode("utf-8").decode("utf-8")
+            ]
+                for idx, tweet in enumerate(all_tweets)]
+
+            df = DataFrame(outtweets, columns=["ID", "Date Created", "Text"])
+
             # Remove any rows with empty strings
-            df.replace(r'^\s*$', np.nan, inplace=True, regex=True) 
+            df.replace(r'^\s*$', np.nan, inplace=True, regex=True)
             df.dropna(how="any", axis=0, inplace=True)
-            df.to_csv('%s_tweets.csv' % user,index=False)
+            df.to_csv('csv/collected/%s_tweets.csv' % user, index=False)
             df.head(3)
 
             # print("Wrote {0} tweets of {1} to CSV file\n".format(

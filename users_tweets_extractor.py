@@ -62,7 +62,7 @@ def main():
 
     # Usernames whose tweets we want to gather.
     users = [
-        "USERNAME"
+
     ]
 
     # giving the user some feed back that the script is running

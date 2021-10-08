@@ -62,7 +62,7 @@ def main():
 
     # Usernames whose tweets we want to gather.
     users = [
-
+        'falan4j',
     ]
 
     # giving the user some feed back that the script is running
@@ -128,7 +128,8 @@ def main():
             # Remove any rows with empty strings
             df.replace(r'^\s*$', np.nan, inplace=True, regex=True)
             df.dropna(how="any", axis=0, inplace=True)
-            df.to_csv('csv/collected/%s_tweets.csv' % user, index=False)
+            # df.to_csv('csv/collected/%s_tweets.csv' % user, index=False)
+            df.to_csv('%s_tweets.csv' % user, index=False)
             df.head(3)
 
             # print("Wrote {0} tweets of {1} to CSV file\n".format(

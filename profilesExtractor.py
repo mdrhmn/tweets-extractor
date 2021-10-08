@@ -75,7 +75,6 @@ def fetch_data(username):
                 # 'Followers':list(get_followers(user.screen_name))[1],
                 # 'Following':list(get_following(user.screen_name))[1],
             }
-            # print(ob)
             followers_data.append(ob)
             print('Data saved, moving on to next user\n')
 
@@ -96,7 +95,7 @@ def fetch_data(username):
                 # 'Followers':list(get_followers(user.screen_name))[1],
                 # 'Following':list(get_following(user.screen_name))[1],
             }
-            # print(ob)
+            print(ob)
             following_data.append(ob)
             print('Data saved, moving on to next user\n')
 
@@ -119,4 +118,19 @@ def fetch_data(username):
         dict_writer.writerows(following_data)
 
 
-fetch_data('mdrhmn_')
+# fetch_data('falan4j')
+
+# fetching the user
+user = api.get_user('falan4j')
+# fetching the followers_count
+followers_count = user.followers_count
+followings_count = user.friends_count
+followings_count = user.friends_count
+tweet_count = user.statuses_count
+profile_img = user.profile_image_url
+
+print("The number of followers: " + str(followers_count))
+print("The number of followings: " + str(followings_count))
+print("The number of tweets: " + str(tweet_count))
+
+

@@ -21,7 +21,7 @@ load_dotenv()
 # access_token = config("ACCESS_TOKEN")
 # access_token_secret = config("ACCESS_TOKEN_SECRET")
 
-# Using dotenv/env.py
+# Using .env file
 consumer_key = os.getenv("CONSUMER_KEY")
 consumer_secret = os.getenv("CONSUMER_SECRET")
 access_token = os.getenv("ACCESS_TOKEN")
